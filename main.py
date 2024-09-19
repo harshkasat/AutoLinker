@@ -16,11 +16,11 @@ def ChromeProfile():
     # Create ChromeOptions instance
     options = webdriver.ChromeOptions()
 
-    # Provide the location where Chrome stores user data
-    options.add_argument(f"--user-data-dir=C:/Users/Zedmat/AppData/Local/Google/Chrome/User Data")
+    # # Provide the location where Chrome stores user data
+    # options.add_argument(f"--user-data-dir=C:/Users/Zedmat/AppData/Local/Google/Chrome/User Data")
 
-    # Provide the profile directory name (make sure it's the correct profile directory)
-    options.add_argument(f'--profile-directory=Default')  # Ensure there's a space if the profile name includes one
+    # # Provide the profile directory name (make sure it's the correct profile directory)
+    # options.add_argument(f'--profile-directory=Default')  # Ensure there's a space if the profile name includes one
 
     # Additional options
     options.add_argument("--no-sandbox")
@@ -91,7 +91,7 @@ def search_profiles(driver: webdriver, base_url: str, limit:int, default_num: Op
             LinkedinAutomate.send_connection_request(driver)
 
 
-def main():
+def linkedIn_automate():
     base_url = random_choice_url()
 
     driver = ChromeProfile()
@@ -100,6 +100,5 @@ def main():
     linkedin.login(driver)    
     search_profiles(driver=driver, base_url=base_url, limit=1)
 
-
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    linkedIn_automate()
