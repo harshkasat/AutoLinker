@@ -44,8 +44,8 @@ class LinkedinAutomate:
         password = os.getenv('LINKEDIN_PASSWORD')
         driver.get("https://www.linkedin.com/")
         # Login user with session is out
-        driver.find_element_by_xpath("//input[@name='session_key']").send_keys(username)
-        driver.find_element_by_xpath("//input[@name='session_password']").send_keys(password)
+        driver.find_element(By.XPATH, "//input[@name='session_key']").send_keys(username)
+        driver.find_element(By.XPATH, "//input[@name='session_password']").send_keys(password)
         driver.find_element(By.XPATH, "//button[@type='submit']").click()
         time.sleep(3)
 
