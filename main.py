@@ -1,18 +1,15 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 import time
 import random
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from typing import Optional
 
-
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def ChromeProfile():
@@ -28,69 +25,32 @@ def ChromeProfile():
     # Additional options
     options.add_argument("--no-sandbox")
 
+    # Enable headless mode
+    options.add_argument("--headless")
+
+    # Optionally, if you're using headless mode with a screen resolution requirement
+    options.add_argument("--window-size=1920x1080")
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
 
     return driver
 
 
 
-def login(driver):
-    driver.get("https://www.linkedin.com/")
-    # driver.find_element(By.ID, "username").send_keys(username)
-    # driver.find_element(By.ID, "password").send_keys(password)
-    # driver.find_element(By.XPATH, "//button[@type='submit']").click()
-    # WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "global-nav")))
+class LinkedinAutomate:
 
-def search_profiles(driver, keyword):
-    search_bar = driver.find_element(By.XPATH, "//input[@aria-label='Search']")
-    search_bar.clear()
-    search_bar.send_keys(keyword)
-    search_bar.send_keys(Keys.RETURN)
-    
-    # Wait for search results to load
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "search-reusables__filters-bar-grouping")))
+    def login(driver):
+        username = os.getenv('LINKEDIN_USERNAME')
+        password = os.getenv('LINKEDIN_PASSWORD')
+        driver.get("https://www.linkedin.com/")
+        # Login user with session is out
+        driver.find_element(By.ID, "username").send_keys(username)
+        driver.find_element(By.ID, "password").send_keys(password)
+        driver.find_element(By.XPATH, "//button[@type='submit']").click()
+        time.sleep(3)
 
-
-def click_people(driver):
-
-    driver.find_element(By.XPATH, "//button[text()='People']").click()
-    # WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH, "//button[@aria-lable = 'Actively hiring filter.'")))
-    time.sleep(5)
-
-    # time.sleep(10)
-
-def extract_profiles(driver, num_profiles):
-    try:
-        # Find all elements with the class name 'app-aware-link'
-        elements = driver.find_elements(By.CLASS_NAME, "app-aware-link")
+    def send_connection_request(driver):
         
-        # Ensure that we have the right number of profiles
-        if len(elements) < num_profiles:
-            num_profiles = len(elements)
-        
-        # Extract the href attribute of each element
-        urls = set([element.get_attribute('href') for element in elements[8:]])
-        filtered_urls = [url for url in urls if '/in/' in url]
-        
-        return filtered_urls
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return []
-    
-    # return profiles
-
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-def send_connection_request(driver, profile_urls):
-    for url in profile_urls:
-        driver.get(url)
-        time.sleep(2)  # Wait for the page to load
-
         try:
             # Find all buttons and filter for those with text "Connect"
             all_buttons = driver.find_elements(By.TAG_NAME, "button")
@@ -102,42 +62,44 @@ def send_connection_request(driver, profile_urls):
                 time.sleep(2)  # Wait for the popup to appear
 
                 # Find and click the "Send now" button
-                send_button = driver.find_element(By.XPATH, "//button[@aria-label='Send now']")
+                send_button = driver.find_element(By.XPATH, "//button[@aria-label='Send without a note']")
                 driver.execute_script("arguments[0].click();", send_button)
-
                 # Find and click the "Dismiss" button to close the dialog
                 dismiss_button = driver.find_element(By.XPATH, "//button[@aria-label='Dismiss']")
                 driver.execute_script("arguments[0].click();", dismiss_button)
                 time.sleep(2)  # Wait before moving to the next connection
 
-            print(f"Connection request sent to {url}")
+                print(f"Connection request sent ")
 
         except Exception as e:
-            print(f"Couldn't send connection request to {url} - {e}")
+            print(f"Couldn't send connection request to {e}")
+
+
+def random_choice_url():
+    all_keyword = ["amazon", 'google', 'microsoft', 'ibm', 'apple', 'saleforce', 'flipkart' 'facebook', 'meta', 'samsung']
+    keyword = random.choice(all_keyword)
+    base_url = f'https://www.linkedin.com/search/results/people/?keywords={keyword}'
+    return base_url
+
+def search_profiles(driver: webdriver, base_url: str, limit:int, default_num: Optional[int] = 5):
+        search_profile_url = base_url + '&origin=FACETED_SEARCH&page={default_num}&position=0' 
+
+        for i in range(default_num, limit+default_num):
+            url = search_profile_url.format(default_num=i)
+            driver.get(url)
+            time.sleep(5)
+            LinkedinAutomate.send_connection_request(driver)
 
 
 def main():
-    # driver = webdriver.Chrome()
+    base_url = random_choice_url()
+
     driver = ChromeProfile()
-    login(driver)
-    
-    # username = os.getenv("LINKEDIN_USERNAME")
-    # password = os.getenv("LINKEDIN_PASSWORD")
-    
-    # login(driver, username, password)
-    
-    search_keyword = "software developer"
-    num_profiles_to_connect = 10
-    
-    search_profiles(driver, search_keyword)
-    # time.sleep(3)
-    click_people(driver)
-    profiles = extract_profiles(driver, num_profiles_to_connect)
-    
-    # for profile in profiles:
-    send_connection_request(driver, profiles)
-    
-    # driver.quit()
+
+    linkedin = LinkedinAutomate
+    linkedin.login(driver)    
+    search_profiles(driver=driver, base_url=base_url, limit=1)
+
 
 if __name__ == "__main__":
     main()
