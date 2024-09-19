@@ -39,4 +39,4 @@ jobs:
           LINKEDIN_USERNAME: ${{ secrets.LINKEDIN_USERNAME }}
           LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
         run: |
-          python your_selenium_script.py
+          python main.py
