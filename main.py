@@ -95,9 +95,9 @@ def linkedIn_automate():
     base_url = random_choice_url()
 
     driver = ChromeProfile()
-    linkedin.login(driver)    
 
     linkedin = LinkedinAutomate
+    linkedin.login(driver)
     search_profiles(driver=driver, base_url=base_url, limit=1)
 
 if __name__ == '__main__':
