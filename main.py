@@ -59,6 +59,8 @@ class LinkedinAutomate:
         try:
             username = os.getenv('LINKEDIN_USERNAME')
             password = os.getenv('LINKEDIN_PASSWORD')
+            logger.info(f"LinkedIn username: {username}")
+            logger.info(f"LinkedIn password: {password}")
             
             if not username or not password:
                 raise ValueError("LinkedIn credentials not found in environment")
