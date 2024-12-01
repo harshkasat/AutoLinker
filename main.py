@@ -88,10 +88,13 @@ class LinkedinAutomate:
     def send_connection_request(driver):
         """Send connection requests with comprehensive error handling."""
         try:
+            button_text = []
             all_buttons = driver.find_elements(By.TAG_NAME, "button")
             logger.info(f"Found {len(all_buttons)} buttons")
             connect_buttons = [btn for btn in all_buttons if btn.text == "Connect"]
-            
+            text = [btn.text for btn in all_buttons]
+            button_text.extend(text)
+            logger.info(f"Found {(button_text)} potential connection requests")
             logger.info(f"Found {len(connect_buttons)} potential connection requests")
             
             for btn in connect_buttons:
