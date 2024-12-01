@@ -9,6 +9,8 @@ jobs:
   run-selenium-script:
     runs-on: ubuntu-latest
 
+    timeout-minutes: 10
+
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -48,7 +50,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: selenium-logs
+          name: linkedin-automation-logs
           path: |
             ./*.png
             ./*.log
