@@ -133,6 +133,7 @@ def search_profiles(driver: webdriver, keyword: str, limit: int, default_num: Op
     try:
         base_url = 'https://www.linkedin.com/search/results/people/'
         search_profile_url = base_url + f'?page={default_num}&keywords={keyword}'
+        logger.info(f"Found {search_profile_url} for keyword {keyword}")       
 
         for i in range(default_num, limit + default_num):
             url = search_profile_url.format(default_num=i)
