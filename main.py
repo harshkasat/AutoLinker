@@ -12,21 +12,21 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def ChromeProfile():
+def chrome_profile():
     # Create ChromeOptions instance
     options = webdriver.ChromeOptions()
 
-    # # Provide the location where Chrome stores user data
+    # Provide the location where Chrome stores user data
     # options.add_argument(f"--user-data-dir=C:/Users/Zedmat/AppData/Local/Google/Chrome/User Data")
 
-    # # Provide the profile directory name (make sure it's the correct profile directory)
+    # Provide the profile directory name (make sure it's the correct profile directory)
     # options.add_argument(f'--profile-directory=Default')  # Ensure there's a space if the profile name includes one
 
     # Additional options
     options.add_argument("--no-sandbox")
 
     # Enable headless mode
-    options.add_argument("--headless")
+    # options.add_argument("--headless")
 
     # Optionally, if you're using headless mode with a screen resolution requirement
     options.add_argument("--window-size=1920x1080")
@@ -42,7 +42,7 @@ class LinkedinAutomate:
     def login(driver):
         username = os.getenv('LINKEDIN_USERNAME')
         password = os.getenv('LINKEDIN_PASSWORD')
-        driver.get("https://www.linkedin.com/")
+        driver.get("https://www.linkedin.com/login")
         # Login user with session is out
         driver.find_element(By.XPATH, "//input[@name='session_key']").send_keys(username)
         driver.find_element(By.XPATH, "//input[@name='session_password']").send_keys(password)
@@ -94,11 +94,11 @@ def search_profiles(driver: webdriver, base_url: str, limit:int, default_num: Op
 def linkedIn_automate():
     base_url = random_choice_url()
 
-    driver = ChromeProfile()
+    driver = chrome_profile()
 
     linkedin = LinkedinAutomate
     linkedin.login(driver)
-    search_profiles(driver=driver, base_url=base_url, limit=1)
+    search_profiles(driver=driver, base_url=base_url, limit=3)
 
 if __name__ == '__main__':
     linkedIn_automate()
