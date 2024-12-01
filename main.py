@@ -124,14 +124,15 @@ class LinkedinAutomate:
 def random_choice_url():
     """Generate a random LinkedIn search URL."""
     all_keywords = ["amazon", 'google', 'microsoft', 'ibm', 'apple', 'salesforce', 'flipkart', 'facebook', 'meta', 'samsung']
-    # keyword = random.choice(all_keywords)
+    keyword = random.choice(all_keywords)
     # return f'https://www.linkedin.com/search/results/people/?keywords={keyword}'
-    return f'https://www.linkedin.com/search/results/people/?page=8'
+    return keyword
 
-def search_profiles(driver: webdriver, base_url: str, limit: int, default_num: Optional[int] = 8):
+def search_profiles(driver: webdriver, keyword: str, limit: int, default_num: Optional[int] = 8):
     """Search and attempt to send connection requests."""
     try:
-        search_profile_url = base_url + '&origin=FACETED_SEARCH&page={default_num}&position=0'
+        base_url = 'https://www.linkedin.com/search/results/people/'
+        search_profile_url = base_url + f'?page={default_num}&keywords={keyword}'
 
         for i in range(default_num, limit + default_num):
             url = search_profile_url.format(default_num=i)
@@ -151,12 +152,12 @@ def linkedIn_automate():
     """Main automation function with comprehensive error handling."""
     driver = None
     try:
-        base_url = random_choice_url()
-        logger.info(f"Selected search URL: {base_url}")
+        keyword = random_choice_url()
+        logger.info(f"Selected search URL: {keyword}")
 
         driver = create_webdriver()
         LinkedinAutomate.login(driver)
-        search_profiles(driver=driver, base_url=base_url, limit=5)
+        search_profiles(driver=driver, keyword=keyword, limit=5)
         
         logger.info("LinkedIn automation completed successfully")
     
