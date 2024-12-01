@@ -124,8 +124,9 @@ class LinkedinAutomate:
 def random_choice_url():
     """Generate a random LinkedIn search URL."""
     all_keywords = ["amazon", 'google', 'microsoft', 'ibm', 'apple', 'salesforce', 'flipkart', 'facebook', 'meta', 'samsung']
-    keyword = random.choice(all_keywords)
-    return f'https://www.linkedin.com/search/results/people/?keywords={keyword}'
+    # keyword = random.choice(all_keywords)
+    # return f'https://www.linkedin.com/search/results/people/?keywords={keyword}'
+    return f'https://www.linkedin.com/search/results/people/?page=8'
 
 def search_profiles(driver: webdriver, base_url: str, limit: int, default_num: Optional[int] = 5):
     """Search and attempt to send connection requests."""
