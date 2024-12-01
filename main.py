@@ -128,7 +128,7 @@ def random_choice_url():
     # return f'https://www.linkedin.com/search/results/people/?keywords={keyword}'
     return f'https://www.linkedin.com/search/results/people/?page=8'
 
-def search_profiles(driver: webdriver, base_url: str, limit: int, default_num: Optional[int] = 5):
+def search_profiles(driver: webdriver, base_url: str, limit: int, default_num: Optional[int] = 8):
     """Search and attempt to send connection requests."""
     try:
         search_profile_url = base_url + '&origin=FACETED_SEARCH&page={default_num}&position=0'
@@ -156,7 +156,7 @@ def linkedIn_automate():
 
         driver = create_webdriver()
         LinkedinAutomate.login(driver)
-        search_profiles(driver=driver, base_url=base_url, limit=3)
+        search_profiles(driver=driver, base_url=base_url, limit=5)
         
         logger.info("LinkedIn automation completed successfully")
     
