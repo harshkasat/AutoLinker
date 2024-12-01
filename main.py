@@ -85,6 +85,25 @@ class LinkedinAutomate:
             # Take a screenshot on failure
             driver.save_screenshot('login_error.png')
             raise
+    
+    @staticmethod
+    def is_logged_in(driver):
+        """Check if login to LinkedIn was successful."""
+        try:
+            # Allow time for potential redirection
+            time.sleep(3)
+            current_url = driver.current_url
+            logger.info(f"Current URL after login: {current_url}")
+            
+            if "feed" in current_url or "linkedin.com/in/" in current_url:
+                logger.info("Login verification successful: User is logged in.")
+                return True
+            else:
+                logger.warning("Login verification failed: Unexpected URL.")
+                return False
+        except Exception as e:
+            logger.error(f"Login verification failed: {e}")
+            return False
 
     @staticmethod
     def send_connection_request(driver):
@@ -164,7 +183,10 @@ def linkedIn_automate():
 
         driver = create_webdriver()
         LinkedinAutomate.login(driver)
-        search_profiles(driver=driver, keyword=keyword, limit=5)
+        if LinkedinAutomate.is_logged_in(driver):
+            search_profiles(driver=driver, keyword=keyword, limit=5)
+        else:
+            logger.error("Login verification failed: User is not logged in.")
         
         logger.info("LinkedIn automation completed successfully")
     
