@@ -89,6 +89,7 @@ class LinkedinAutomate:
         """Send connection requests with comprehensive error handling."""
         try:
             all_buttons = driver.find_elements(By.TAG_NAME, "button")
+            logger.info(f"Found {len(all_buttons)} buttons")
             connect_buttons = [btn for btn in all_buttons if btn.text == "Connect"]
             
             logger.info(f"Found {len(connect_buttons)} potential connection requests")
