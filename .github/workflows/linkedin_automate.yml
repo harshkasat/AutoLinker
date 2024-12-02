@@ -46,11 +46,11 @@ jobs:
           python main.py
 
       # Optional: Upload logs or screenshots if the script fails
-      - name: Upload artifacts on failure
+      - name: Upload checkpoint screenshots
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: linkedin-automation-logs
+          name: checkpoint-artifacts
           path: |
-            ./*.png
-            ./*.log
+            *.png
+            *.log

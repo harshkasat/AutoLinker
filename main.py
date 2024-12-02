@@ -60,8 +60,6 @@ class LinkedinAutomate:
         try:
             username = os.getenv('LINKEDIN_USERNAME')
             password = os.getenv('LINKEDIN_PASSWORD')
-            logger.info(f"LinkedIn username: {username}")
-            logger.info(f"LinkedIn password: {password}")
             
             if not username or not password:
                 raise ValueError("LinkedIn credentials not found in environment")
@@ -95,6 +93,14 @@ class LinkedinAutomate:
             time.sleep(3)
             current_url = driver.current_url
             logger.info(f"Current URL after login: {current_url}")
+
+            # Check if redirected to a checkpoint
+            if "checkpoint" in current_url:
+                print("Checkpoint detected. Manual intervention required.")
+                # Optionally, capture a screenshot for debugging
+                driver.save_screenshot('checkpoint.png')
+            else:
+                print("Successfully logged in.")
             
             if "feed" in current_url or "linkedin.com/in/" in current_url:
                 logger.info("Login verification successful: User is logged in.")
