@@ -5,13 +5,12 @@ import logging
 from typing import Optional
 
 from selenium import webdriver
+import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from webdriver_manager.chrome import ChromeDriverManager
 from dotenv import load_dotenv
 
 # Configure logging
@@ -44,8 +43,10 @@ def create_webdriver():
     """Create and return a configured Chrome WebDriver."""
     try:
         options = create_chrome_options()
-        service = Service(ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=service, options=options)
+        driver = uc.Chrome(
+            options=options, 
+            use_subprocess=True
+        )
         driver.implicitly_wait(10)
         return driver
     except Exception as e:
