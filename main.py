@@ -5,12 +5,13 @@ import logging
 from typing import Optional
 
 from selenium import webdriver
-import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from webdriver_manager.chrome import ChromeDriverManager
 from dotenv import load_dotenv
 
 # Configure logging
@@ -43,10 +44,8 @@ def create_webdriver():
     """Create and return a configured Chrome WebDriver."""
     try:
         options = create_chrome_options()
-        driver = uc.Chrome(
-            options=options, 
-            use_subprocess=True
-        )
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=options)
         driver.implicitly_wait(10)
         return driver
     except Exception as e:
@@ -122,7 +121,7 @@ class LinkedinAutomate:
             connect_buttons = [btn for btn in all_buttons if btn.text == "Connect"]
             text = [btn.text for btn in all_buttons]
             button_text.extend(text)
-            logger.info(f"Found {(button_text)} potential connection requests")
+            # logger.info(f"Found {(button_text)} potential connection requests")
             logger.info(f"Found {len(connect_buttons)} potential connection requests")
             
             for btn in connect_buttons:
@@ -136,13 +135,7 @@ class LinkedinAutomate:
                         EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Send without a note']"))
                     )
                     driver.execute_script("arguments[0].click();", send_button)
-                    
-                    # Dismiss dialog
-                    dismiss_button = WebDriverWait(driver, 5).until(
-                        EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Dismiss']"))
-                    )
-                    driver.execute_script("arguments[0].click();", dismiss_button)
-                    
+
                     time.sleep(2)
                     logger.info("Connection request sent successfully")
                 except Exception as btn_error:
@@ -157,21 +150,20 @@ def random_choice_url():
     """Generate a random LinkedIn search URL."""
     all_keywords = ["amazon", 'google', 'microsoft', 'ibm', 'apple', 'salesforce', 'flipkart', 'facebook', 'meta', 'samsung']
     keyword = random.choice(all_keywords)
-    # return f'https://www.linkedin.com/search/results/people/?keywords={keyword}'
     return keyword
 
-def search_profiles(driver: webdriver, keyword: str, limit: int, default_num: Optional[int] = 8):
+def search_profiles(driver: webdriver, keyword: str, limit: int, page_no: Optional[int] = 8):
     """Search and attempt to send connection requests."""
     try:
         base_url = 'https://www.linkedin.com/search/results/people/'
-        search_profile_url = base_url + f'?page={default_num}&keywords={keyword}'
-        logger.info(f"Found {search_profile_url} for keyword {keyword}")       
-
-        for i in range(default_num, limit + default_num):
-            url = search_profile_url.format(default_num=i)
+        
+        for i in range(page_no, limit + page_no):
+            # Construct the URL for the current page
+            search_profile_url = f'{base_url}?page={i}&keywords={keyword}'
             logger.info(f"Searching profiles on page {i}")
+            logger.info("Searching profiles URL: " + search_profile_url)
             
-            driver.get(url)
+            driver.get(search_profile_url)
             time.sleep(5)
             
             LinkedinAutomate.send_connection_request(driver)
