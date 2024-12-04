@@ -21,7 +21,39 @@ logger = logging.getLogger(__name__)
 
 def random_keyword():
     """Generate a random LinkedIn search URL."""
-    all_keywords = ["amazon", 'google', 'microsoft', 'ibm', 'apple', 'salesforce', 'flipkart', 'facebook', 'meta', 'samsung']
+    all_keywords = [
+    "Google",
+    "Apple",
+    "Microsoft",
+    "Amazon",
+    "Salesforce",
+    "Meta",
+    "IBM",
+    "Netflix",
+    "Adobe",
+    "Intel",
+    "NVIDIA",
+    "Cisco", 
+    "Oracle",
+    "Zoom",
+    "Stripe",
+    "Pinterest",
+    "LinkedIn",
+    "Square",
+    "Snapchat",
+    "Dropbox",
+    "GitHub",
+    "Slack",
+    "Atlassian",
+    "Twilio",
+    "VMware",
+    "ServiceNow",
+    "HubSpot",
+    "Red Hat",
+    "Qualcomm", 
+    "Airbnb"
+]
+
     keyword = random.choice(all_keywords)
     return keyword
 
