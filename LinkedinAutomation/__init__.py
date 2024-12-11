@@ -68,6 +68,7 @@ class ChromeDriver:
             options = self.create_chrome_options()
             service = Service(ChromeDriverManager().install())
             driver = webdriver.Chrome(service=service, options=options)
+            # driver = webdriver.Edge()
             driver.maximize_window()
             driver.implicitly_wait(10)
             return driver

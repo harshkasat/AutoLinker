@@ -88,13 +88,13 @@ def send_connection_request(driver):
             raise
 
 
-def search_profiles(driver: webdriver, limit: Optional[int] = 8, page_no: Optional[int] = 8, keyword: Optional[str] = None):
+def search_profiles(driver: webdriver, page_limit: Optional[int] = 8, page_no: Optional[int] = 8, keyword: Optional[str] = None):
     """Search and attempt to send connection requests."""
     keyword = random_keyword()
     try:
         base_url = 'https://www.linkedin.com/search/results/people/'
         
-        for i in range(page_no, limit + page_no):
+        for i in range(page_no, page_limit + page_no):
             # Construct the URL for the current page
             search_profile_url = f'{base_url}?page={i}&keywords={keyword}'
             logger.info(f"Searching profiles on page {i}")
@@ -109,4 +109,3 @@ def search_profiles(driver: webdriver, limit: Optional[int] = 8, page_no: Option
         logger.error(f"Error in searching profiles: {e}")
         driver.save_screenshot('search_profiles_error.png')
         raise
-
